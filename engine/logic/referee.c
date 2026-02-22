@@ -10,7 +10,7 @@
  * @brief Determines whether a goal has been scored.
  *
  * This function checks if the ball has completely crossed either goal line
- * while also being fully inside the vertical goal mouth.
+ * while also being fully inside the vertical goalmouth.
  *
  * Important details:
  * - A goal is only valid if the *entire ball* (taking BALL_RADIUS into account)
@@ -24,12 +24,31 @@
  * - 0 if no goal has occurred.
  */
 static int goal(float x, float y) {
-    // TODO 1: implement this function
-        // You must check for and print these EXACT logs:
-        // printf("GOAL! Right net hit at x:%.2f, y=%.2f\n", x, y);
-        // printf("GOAL! Left net hit at x:%.2f, y=%.2f\n", x, y);
+    // Constructing the borders
+    const float left_line = PITCH_X;
+    const float right_line = PITCH_X + PITCH_W;
+    const float goal_top = CENTER_Y - (float) GOAL_HEIGHT / 2.0f;
+    const float goal_bottom = CENTER_Y + (float) GOAL_HEIGHT / 2.0f;
 
-    return 0; // for now
+    // Checking the borders
+    const bool within_goals = (y - BALL_RADIUS >= goal_top) && (y + BALL_RADIUS <= goal_bottom);
+    const bool past_left_line = (x + BALL_RADIUS < left_line);
+    const bool past_right_line = (x - BALL_RADIUS > right_line);
+
+    // Final result
+    if (within_goals) {
+        if (past_left_line) {
+            printf("GOAL! Left net hit at x:%.2f, y=%.2f\n", x, y);
+            return 2;
+        } else if (past_right_line) {
+            printf("GOAL! Right net hit at x:%.2f, y=%.2f\n", x, y);
+            return 1;
+        } else {
+            return 0;
+        }
+    } else {
+        return 0;
+    }
 }
 
 /**
@@ -45,11 +64,25 @@ static int goal(float x, float y) {
  * @return true if the ball is fully out of bounds, false otherwise.
  */
 static bool out(float x, float y) {
-    // TODO 2: implement this function
-        // You must check for and print this EXACT log:
-        // printf("Ball is out: x=%.2f, y=%.2f\n", x, y);
-    
-    return false; // for now
+    // Constructing the borders
+    const float left_line = PITCH_X;
+    const float right_line = PITCH_X + PITCH_W;
+    const float top_line = PITCH_Y;
+    const float bottom_line = PITCH_Y + PITCH_H;
+
+    // Checking the borders
+    const bool past_left = (x + BALL_RADIUS < left_line);
+    const bool past_right = (x - BALL_RADIUS > right_line);
+    const bool past_top = (y + BALL_RADIUS < top_line);
+    const bool past_bottom = (y - BALL_RADIUS > bottom_line);
+
+    // Final result
+    if (past_left || past_right || past_top || past_bottom) {
+        printf("Ball is out: x=%.2f, y=%.2f\n", x, y);
+        return true;
+    } else {
+        return false;
+    }
 }
 
 /**
@@ -74,11 +107,35 @@ static bool out(float x, float y) {
  * - OUT if the ball is out of bounds,
  * - 0 if no event occurred.
  */
-int referee(struct Scene* scene) {
+int referee(struct Scene *scene) {
+    // Sanity checks
+    if (!scene || !scene->ball) {
+        return PLAY_ON;
+    }
 
-    // TODO 3: implement this function
+    // Getting the ball's x and y
+    const float x = scene->ball->position.x;
+    const float y = scene->ball->position.y;
 
-    return PLAY_ON;   // for now
+    // Checking the conditions
+    const int goal_result = goal(x, y);
+    if (goal_result == 1) {
+        if (scene->first_team) {
+            scene->first_team->score++;
+        }
+        return GOAL;
+    } else if (goal_result == 2) {
+        if (scene->second_team) {
+            scene->second_team->score++;
+        }
+        return GOAL;
+    } else {
+        if (out(x, y)) {
+            return OUT;
+        } else {
+            return PLAY_ON;
+        }
+    }
 }
 
 
@@ -98,9 +155,9 @@ int referee(struct Scene* scene) {
  */
 void verify_talents(struct Talents talents) {
     // TODO 4: implement this function
-        // You must check for and print this EXACT error:    
-            // printf("ERROR: Invalid talents! Values: defence=%d, agility=%d, dribbling=%d, shooting=%d, sum=%d\n",
-            //    talents.defence, talents.agility, talents.dribbling, talents.shooting, sum);
+    // You must check for and print this EXACT error:
+    // printf("ERROR: Invalid talents! Values: defence=%d, agility=%d, dribbling=%d, shooting=%d, sum=%d\n",
+    //    talents.defence, talents.agility, talents.dribbling, talents.shooting, sum);
 }
 
 
@@ -119,11 +176,10 @@ void verify_talents(struct Talents talents) {
  * @param scene  Pointer to the current game scene.
  */
 void verify_state(struct Player *player, struct Scene *scene) {
-
     // TODO 5: implement this function
-        // You must check for and print this EXACT error:
-        // printf(" ERROR: the ball is not yours, you can't shoot! (team %d, player %d)\n",
-        //         player->team, player->kit);
+    // You must check for and print this EXACT error:
+    // printf(" ERROR: the ball is not yours, you can't shoot! (team %d, player %d)\n",
+    //         player->team, player->kit);
 }
 
 /**
@@ -140,11 +196,10 @@ void verify_state(struct Player *player, struct Scene *scene) {
  * @param player Pointer to the player whose movement is being verified.
  */
 void verify_movement(struct Player *player) {
-    
     // TODO 6: implement this function
-        // You must check for and print these EXACT errors:
-        // printf(" ERROR: Demanding to run too fast in dimension x! (team %d, player %d)\n", player->team, player->kit);
-        // printf(" ERROR: Demanding to run too fast in dimension y! (team %d, player %d)\n", player->team, player->kit);
+    // You must check for and print these EXACT errors:
+    // printf(" ERROR: Demanding to run too fast in dimension x! (team %d, player %d)\n", player->team, player->kit);
+    // printf(" ERROR: Demanding to run too fast in dimension y! (team %d, player %d)\n", player->team, player->kit);
 }
 
 /**
@@ -164,10 +219,9 @@ void verify_movement(struct Player *player) {
  * @param kickoff True if the shot occurs during kickoff.
  */
 void verify_shoot(struct Ball *ball, bool kickoff) {
-
     // TODO 7: implement this function
-        // You must check for and print these EXACT errors:
-        // printf(" ERROR: Demanding to shoot too fast in dimension x! (team %d, player %d)\n", player->team, player->kit);
-        // printf(" ERROR: Demanding to shoot too fast in dimension y! (team %d, player %d)\n", player->team, player->kit);
-        // printf(" ERROR: You must pass to your own half! (team %d, player %d)\n", player->team, player->kit);
+    // You must check for and print these EXACT errors:
+    // printf(" ERROR: Demanding to shoot too fast in dimension x! (team %d, player %d)\n", player->team, player->kit);
+    // printf(" ERROR: Demanding to shoot too fast in dimension y! (team %d, player %d)\n", player->team, player->kit);
+    // printf(" ERROR: You must pass to your own half! (team %d, player %d)\n", player->team, player->kit);
 }
