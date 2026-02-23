@@ -108,7 +108,7 @@ static bool out(float x, float y) {
  * - 0 if no event occurred.
  */
 int referee(struct Scene *scene) {
-    // Sanity checks
+    // Sanity check
     if (!scene || !scene->ball) {
         return PLAY_ON;
     }
@@ -154,10 +154,19 @@ int referee(struct Scene *scene) {
  * @param talents The talent structure to validate.
  */
 void verify_talents(struct Talents talents) {
-    // TODO 4: implement this function
-    // You must check for and print this EXACT error:
-    // printf("ERROR: Invalid talents! Values: defence=%d, agility=%d, dribbling=%d, shooting=%d, sum=%d\n",
-    //    talents.defence, talents.agility, talents.dribbling, talents.shooting, sum);
+    // Checking each range
+    const bool defence_check = (1 <= talents.defence) && (talents.defence <= MAX_TALENT_PER_SKILL);
+    const bool agility_check = (1 <= talents.agility) && (talents.agility <= MAX_TALENT_PER_SKILL);
+    const bool dribbling_check = (1 <= talents.dribbling) && (talents.dribbling <= MAX_TALENT_PER_SKILL);
+    const bool shooting_check = (1 <= talents.shooting) && (talents.shooting <= MAX_TALENT_PER_SKILL);
+    const int sum = talents.defence + talents.agility + talents.dribbling + talents.shooting;
+    const bool sum_check = (sum <= MAX_TALENT_PER_PLAYER);
+
+    // Printing results
+    if (!defence_check || !agility_check || !dribbling_check || !shooting_check || !sum_check) {
+        printf("ERROR: Invalid talents! Values: defence=%d, agility=%d, dribbling=%d, shooting=%d, sum=%d\n",
+               talents.defence, talents.agility, talents.dribbling, talents.shooting, sum);
+    }
 }
 
 
@@ -176,10 +185,17 @@ void verify_talents(struct Talents talents) {
  * @param scene  Pointer to the current game scene.
  */
 void verify_state(struct Player *player, struct Scene *scene) {
-    // TODO 5: implement this function
-    // You must check for and print this EXACT error:
-    // printf(" ERROR: the ball is not yours, you can't shoot! (team %d, player %d)\n",
-    //         player->team, player->kit);
+    // Sanity check
+    if (!player || !scene || !scene->ball) {
+        return;
+    }
+
+    // Check the state and correct if needed
+    if (player->state == SHOOTING && scene->ball->possessor != player) {
+        printf(" ERROR: the ball is not yours, you can't shoot! (team %d, player %d)\n",
+               player->team, player->kit);
+        player->state = MOVING;
+    }
 }
 
 /**
@@ -196,10 +212,25 @@ void verify_state(struct Player *player, struct Scene *scene) {
  * @param player Pointer to the player whose movement is being verified.
  */
 void verify_movement(struct Player *player) {
-    // TODO 6: implement this function
-    // You must check for and print these EXACT errors:
-    // printf(" ERROR: Demanding to run too fast in dimension x! (team %d, player %d)\n", player->team, player->kit);
-    // printf(" ERROR: Demanding to run too fast in dimension y! (team %d, player %d)\n", player->team, player->kit);
+    // Sanity Check
+    if (!player) {
+        return;
+    }
+
+    // Constructing boundaries
+    const float max_velocity = MAX_PLAYER_VELOCITY * ((float) player->talents.agility / (float) MAX_TALENT_PER_SKILL);
+
+    // Final check
+    if (fabsf(player->velocity.x) > max_velocity) {
+        printf(" ERROR: Demanding to run too fast in dimension x! (team %d, player %d)\n",
+               player->team, player->kit);
+        player->velocity.x = (player->velocity.x > 0.0f) ? max_velocity : -max_velocity;
+    }
+    if (fabsf(player->velocity.y) > max_velocity) {
+        printf(" ERROR: Demanding to run too fast in dimension y! (team %d, player %d)\n",
+               player->team, player->kit);
+        player->velocity.y = (player->velocity.y > 0.0f) ? max_velocity : -max_velocity;
+    }
 }
 
 /**
@@ -220,8 +251,42 @@ void verify_movement(struct Player *player) {
  */
 void verify_shoot(struct Ball *ball, bool kickoff) {
     // TODO 7: implement this function
-    // You must check for and print these EXACT errors:
-    // printf(" ERROR: Demanding to shoot too fast in dimension x! (team %d, player %d)\n", player->team, player->kit);
-    // printf(" ERROR: Demanding to shoot too fast in dimension y! (team %d, player %d)\n", player->team, player->kit);
-    // printf(" ERROR: You must pass to your own half! (team %d, player %d)\n", player->team, player->kit);
+
+    // Sanity Check
+    if (!ball || !ball->possessor) {
+        return;
+    }
+
+    // Constructing boundaries
+    Player *player = ball->possessor;
+    const float max_velocity =
+            MAX_BALL_VELOCITY * ((float) player->talents.shooting / (float) MAX_TALENT_PER_SKILL);
+
+    // Check the ball velocity
+    if (fabsf(ball->velocity.x) > max_velocity) {
+        printf(" ERROR: Demanding to shoot too fast in dimension x! (team %d, player %d)\n",
+               player->team, player->kit);
+        ball->velocity.x = (ball->velocity.x > 0.0f) ? max_velocity : -max_velocity;
+    }
+    if (fabsf(ball->velocity.y) > max_velocity) {
+        printf(" ERROR: Demanding to shoot too fast in dimension y! (team %d, player %d)\n",
+               player->team, player->kit);
+        ball->velocity.y = (ball->velocity.y > 0.0f) ? max_velocity : -max_velocity;
+    }
+
+    // Check whether the ball is in the center
+    const bool ball_is_center =
+            (fabsf(ball->position.x - CENTER_X) < 0.5f) && (fabsf(ball->position.y - CENTER_Y) < 0.5f);
+
+    // Check for the kick-off state
+    if (kickoff && ball_is_center) {
+        if ((player->team == 1 && ball->velocity.x > 0) || (player->team == 2 && ball->velocity.x < 0)) {
+            printf(" ERROR: You must pass to your own half! (team %d, player %d)\n", player->team, player->kit);
+        }
+    }
+
+    /*// if the velocity was exactly 0, force a tiny legal direction
+    if (lengthVec2(&ball->velocity) == 0.0f) {
+        ball->velocity.x = (player->team == 1) ? -1.0f : 1.0f;
+    }*/
 }
