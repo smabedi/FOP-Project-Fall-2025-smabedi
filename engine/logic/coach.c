@@ -40,9 +40,7 @@ bool coach_both_teams = false;
  * ------------------------------------------------------------------------- */
 
 /* Team 1 movement logic */
-void movement_logic_1_0(struct Player *self, const struct Scene *scene) {
-
-}
+void movement_logic_1_0(struct Player *self, const struct Scene *scene) { (void) scene; }
 
 void movement_logic_1_1(struct Player *self, const struct Scene *scene) { (void) scene; }
 
@@ -180,7 +178,7 @@ static struct Talents team1_talents[6] = {
         {3, 7, 5, 5},
         {8, 6, 3, 3},
         {8, 5, 4, 3},
-        {9, 6, 3, 2},
+        {8, 6, 3, 3},
 };
 
 /* Team 2 */
@@ -190,7 +188,7 @@ static struct Talents team2_talents[6] = {
         {4, 6, 5, 5},
         {8, 5, 4, 3},
         {7, 6, 4, 3},
-        {9, 5, 4, 2},
+        {8, 5, 4, 3},
 };
 
 struct Talents get_talents(int team, int kit) {
@@ -206,20 +204,20 @@ struct Talents get_talents(int team, int kit) {
 static struct Vec2 team1_positions[6] = {
         {350, CENTER_Y},
         {400, CENTER_Y - 125},
-        {250, CENTER_Y - 75},
-        {80, CENTER_Y},
-        {250, CENTER_Y + 75},
         {400, CENTER_Y + 125},
+        {250, CENTER_Y - 75},
+        {250, CENTER_Y + 75},
+        {80, CENTER_Y},
 };
 
 /* Team 2 */
 static struct Vec2 team2_positions[6] = {
         {SCREEN_WIDTH - 350, CENTER_Y},
         {SCREEN_WIDTH - 400, CENTER_Y - 125},
-        {SCREEN_WIDTH - 250, CENTER_Y - 75},
-        {SCREEN_WIDTH - 80, CENTER_Y},
-        {SCREEN_WIDTH - 250, CENTER_Y + 75},
         {SCREEN_WIDTH - 400, CENTER_Y + 125},
+        {SCREEN_WIDTH - 250, CENTER_Y - 75},
+        {SCREEN_WIDTH - 250, CENTER_Y + 75},
+        {SCREEN_WIDTH - 80, CENTER_Y},
 };
 
 struct Vec2 get_positions(int team, int kit) {
