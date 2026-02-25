@@ -219,8 +219,6 @@ void verify_movement(struct Player *player) {
  * @param kickoff True if the shot occurs during kickoff.
  */
 void verify_shoot(struct Ball *ball, bool kickoff) {
-    // TODO 7: implement this function
-
     // Sanity Check
     if (!ball || !ball->possessor) {
         return;
