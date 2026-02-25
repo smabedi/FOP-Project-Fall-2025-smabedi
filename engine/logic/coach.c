@@ -39,21 +39,50 @@ bool coach_both_teams = true;
  * Thank you for your attention to this matter!
  * ------------------------------------------------------------------------- */
 
+float danger_field(const struct Scene *scene, const float x, const float y) {
+    float danger = 0;
+    for (int i = 0; i < PLAYER_COUNT; i++) {
+        const struct Vec2 position = scene->first_team->players[i]->position;
+        const float distance = lengthVec2(&(Vec2) {position.x - x, position.y - y});
+        danger += 1 / (distance * distance);
+    }
+}
+
+float max_player_velocity(struct Player *self) {
+    return MAX_PLAYER_VELOCITY * ((float) self->talents.agility / (float) MAX_TALENT_PER_SKILL);
+}
+
 /* Team 1 movement logic */
-void movement_logic_1_0(struct Player *self, struct Scene *scene) { (void)scene; }
-void movement_logic_1_1(struct Player *self, struct Scene *scene) { (void)scene; }
-void movement_logic_1_2(struct Player *self, struct Scene *scene) { (void)scene; }
-void movement_logic_1_3(struct Player *self, struct Scene *scene) { (void)scene; }
-void movement_logic_1_4(struct Player *self, struct Scene *scene) { (void)scene; }
-void movement_logic_1_5(struct Player *self, struct Scene *scene) { (void)scene; }
+void movement_logic_1_0(struct Player *self, struct Scene *scene) {
+    if (self->team == scene->ball->possessor->team) {
+
+    }
+}
+
+void movement_logic_1_1(struct Player *self, struct Scene *scene) { (void) scene; }
+
+void movement_logic_1_2(struct Player *self, struct Scene *scene) {
+    self->velocity.y = max_player_velocity(self);
+}
+
+void movement_logic_1_3(struct Player *self, struct Scene *scene) { (void) scene; }
+
+void movement_logic_1_4(struct Player *self, struct Scene *scene) { (void) scene; }
+
+void movement_logic_1_5(struct Player *self, struct Scene *scene) { (void) scene; }
 
 /* Team 2 movement logic */
-void movement_logic_2_0(struct Player *self, struct Scene *scene) { (void)scene; }
-void movement_logic_2_1(struct Player *self, struct Scene *scene) { (void)scene; }
-void movement_logic_2_2(struct Player *self, struct Scene *scene) { (void)scene; }
-void movement_logic_2_3(struct Player *self, struct Scene *scene) { (void)scene; }
-void movement_logic_2_4(struct Player *self, struct Scene *scene) { (void)scene; }
-void movement_logic_2_5(struct Player *self, struct Scene *scene) { (void)scene; }
+void movement_logic_2_0(struct Player *self, struct Scene *scene) { (void) scene; }
+
+void movement_logic_2_1(struct Player *self, struct Scene *scene) { (void) scene; }
+
+void movement_logic_2_2(struct Player *self, struct Scene *scene) { (void) scene; }
+
+void movement_logic_2_3(struct Player *self, struct Scene *scene) { (void) scene; }
+
+void movement_logic_2_4(struct Player *self, struct Scene *scene) { (void) scene; }
+
+void movement_logic_2_5(struct Player *self, struct Scene *scene) { (void) scene; }
 
 /* Team 1 shooting logic */
 void shooting_logic_1_0(struct Player *self, struct Scene *scene) {
@@ -63,45 +92,64 @@ void shooting_logic_1_0(struct Player *self, struct Scene *scene) {
         ball->position.y == CENTER_Y &&
         ball->velocity.x == 0.0f &&
         ball->velocity.y == 0.0f
-    )       // it is kick-off, pass to your own half
-        ball->velocity.x = (self->team == 1)? -350.0f: 350.0f;
+            )       // it is kick-off, pass to your own half
+        ball->velocity.x = (self->team == 1) ? -350.0f : 350.0f;
     else {  // it is not kick-off, let's play air hockey!
         ball->velocity.x = 8350.0f;
         ball->velocity.y = 8350.0f;
     }
 
- }
+}
 
 
-void shooting_logic_1_1(struct Player *self, struct Scene *scene) { (void)scene; }
-void shooting_logic_1_2(struct Player *self, struct Scene *scene) { (void)scene; }
-void shooting_logic_1_3(struct Player *self, struct Scene *scene) { (void)scene; }
-void shooting_logic_1_4(struct Player *self, struct Scene *scene) { (void)scene; }
-void shooting_logic_1_5(struct Player *self, struct Scene *scene) { (void)scene; }
+void shooting_logic_1_1(struct Player *self, struct Scene *scene) { (void) scene; }
+
+void shooting_logic_1_2(struct Player *self, struct Scene *scene) { (void) scene; }
+
+void shooting_logic_1_3(struct Player *self, struct Scene *scene) { (void) scene; }
+
+void shooting_logic_1_4(struct Player *self, struct Scene *scene) { (void) scene; }
+
+void shooting_logic_1_5(struct Player *self, struct Scene *scene) { (void) scene; }
 
 /* Team 2 shooting logic */
-void shooting_logic_2_0(struct Player *self, struct Scene *scene) { (void)scene; }
-void shooting_logic_2_1(struct Player *self, struct Scene *scene) { (void)scene; }
-void shooting_logic_2_2(struct Player *self, struct Scene *scene) { (void)scene; }
-void shooting_logic_2_3(struct Player *self, struct Scene *scene) { (void)scene; }
-void shooting_logic_2_4(struct Player *self, struct Scene *scene) { (void)scene; }
-void shooting_logic_2_5(struct Player *self, struct Scene *scene) { (void)scene; }
+void shooting_logic_2_0(struct Player *self, struct Scene *scene) { (void) scene; }
+
+void shooting_logic_2_1(struct Player *self, struct Scene *scene) { (void) scene; }
+
+void shooting_logic_2_2(struct Player *self, struct Scene *scene) { (void) scene; }
+
+void shooting_logic_2_3(struct Player *self, struct Scene *scene) { (void) scene; }
+
+void shooting_logic_2_4(struct Player *self, struct Scene *scene) { (void) scene; }
+
+void shooting_logic_2_5(struct Player *self, struct Scene *scene) { (void) scene; }
 
 /* Team 1 change_state logic */
-void change_state_logic_1_0(struct Player *self, struct Scene *scene) { (void)scene; }
-void change_state_logic_1_1(struct Player *self, struct Scene *scene) { (void)scene; }
-void change_state_logic_1_2(struct Player *self, struct Scene *scene) { (void)scene; }
-void change_state_logic_1_3(struct Player *self, struct Scene *scene) { (void)scene; }
-void change_state_logic_1_4(struct Player *self, struct Scene *scene) { (void)scene; }
-void change_state_logic_1_5(struct Player *self, struct Scene *scene) { (void)scene; }
+void change_state_logic_1_0(struct Player *self, struct Scene *scene) { (void) scene; }
+
+void change_state_logic_1_1(struct Player *self, struct Scene *scene) { (void) scene; }
+
+void change_state_logic_1_2(struct Player *self, struct Scene *scene) { (void) scene; }
+
+void change_state_logic_1_3(struct Player *self, struct Scene *scene) { (void) scene; }
+
+void change_state_logic_1_4(struct Player *self, struct Scene *scene) { (void) scene; }
+
+void change_state_logic_1_5(struct Player *self, struct Scene *scene) { (void) scene; }
 
 /* Team 2 change_state logic */
-void change_state_logic_2_0(struct Player *self, struct Scene *scene) { (void)scene; }
-void change_state_logic_2_1(struct Player *self, struct Scene *scene) { (void)scene; }
-void change_state_logic_2_2(struct Player *self, struct Scene *scene) { (void)scene; }
-void change_state_logic_2_3(struct Player *self, struct Scene *scene) { (void)scene; }
-void change_state_logic_2_4(struct Player *self, struct Scene *scene) { (void)scene; }
-void change_state_logic_2_5(struct Player *self, struct Scene *scene) { (void)scene; }
+void change_state_logic_2_0(struct Player *self, struct Scene *scene) { (void) scene; }
+
+void change_state_logic_2_1(struct Player *self, struct Scene *scene) { (void) scene; }
+
+void change_state_logic_2_2(struct Player *self, struct Scene *scene) { (void) scene; }
+
+void change_state_logic_2_3(struct Player *self, struct Scene *scene) { (void) scene; }
+
+void change_state_logic_2_4(struct Player *self, struct Scene *scene) { (void) scene; }
+
+void change_state_logic_2_5(struct Player *self, struct Scene *scene) { (void) scene; }
 
 /* -------------------------------------------------------------------------
  * Lookup tables for factory
@@ -193,7 +241,7 @@ static struct Vec2 team1_positions[6] = {
         {400, CENTER_Y + 125},
         {250, CENTER_Y - 75},
         {250, CENTER_Y + 75},
-        {80, CENTER_Y},
+        {80,  CENTER_Y},
 };
 
 /* Team 2 */
@@ -203,7 +251,7 @@ static struct Vec2 team2_positions[6] = {
         {SCREEN_WIDTH - 400, CENTER_Y + 125},
         {SCREEN_WIDTH - 250, CENTER_Y - 75},
         {SCREEN_WIDTH - 250, CENTER_Y + 75},
-        {SCREEN_WIDTH - 80, CENTER_Y},
+        {SCREEN_WIDTH - 80,  CENTER_Y},
 };
 
 struct Vec2 get_positions(int team, int kit) {
