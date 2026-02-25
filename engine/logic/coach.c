@@ -11,7 +11,7 @@
 
 // Set to false to let the other team use their own logic (if you implement it)
 // Set to true to test your logic on both teams
-bool coach_both_teams = false;
+bool coach_both_teams = true;
 
 /* -------------------------------------------------------------------------
  * Logic Functions
@@ -40,82 +40,68 @@ bool coach_both_teams = false;
  * ------------------------------------------------------------------------- */
 
 /* Team 1 movement logic */
-void movement_logic_1_0(struct Player *self, const struct Scene *scene) { (void) scene; }
-
-void movement_logic_1_1(struct Player *self, const struct Scene *scene) { (void) scene; }
-
-void movement_logic_1_2(struct Player *self, const struct Scene *scene) { (void) scene; }
-
-void movement_logic_1_3(struct Player *self, const struct Scene *scene) { (void) scene; }
-
-void movement_logic_1_4(struct Player *self, const struct Scene *scene) { (void) scene; }
-
-void movement_logic_1_5(struct Player *self, const struct Scene *scene) { (void) scene; }
+void movement_logic_1_0(struct Player *self, struct Scene *scene) { (void)scene; }
+void movement_logic_1_1(struct Player *self, struct Scene *scene) { (void)scene; }
+void movement_logic_1_2(struct Player *self, struct Scene *scene) { (void)scene; }
+void movement_logic_1_3(struct Player *self, struct Scene *scene) { (void)scene; }
+void movement_logic_1_4(struct Player *self, struct Scene *scene) { (void)scene; }
+void movement_logic_1_5(struct Player *self, struct Scene *scene) { (void)scene; }
 
 /* Team 2 movement logic */
-void movement_logic_2_0(struct Player *self, const struct Scene *scene) { (void) scene; }
-
-void movement_logic_2_1(struct Player *self, const struct Scene *scene) { (void) scene; }
-
-void movement_logic_2_2(struct Player *self, const struct Scene *scene) { (void) scene; }
-
-void movement_logic_2_3(struct Player *self, const struct Scene *scene) { (void) scene; }
-
-void movement_logic_2_4(struct Player *self, const struct Scene *scene) { (void) scene; }
-
-void movement_logic_2_5(struct Player *self, const struct Scene *scene) { (void) scene; }
+void movement_logic_2_0(struct Player *self, struct Scene *scene) { (void)scene; }
+void movement_logic_2_1(struct Player *self, struct Scene *scene) { (void)scene; }
+void movement_logic_2_2(struct Player *self, struct Scene *scene) { (void)scene; }
+void movement_logic_2_3(struct Player *self, struct Scene *scene) { (void)scene; }
+void movement_logic_2_4(struct Player *self, struct Scene *scene) { (void)scene; }
+void movement_logic_2_5(struct Player *self, struct Scene *scene) { (void)scene; }
 
 /* Team 1 shooting logic */
-void shooting_logic_1_0(struct Player *self, const struct Scene *scene) { (void) scene; }
+void shooting_logic_1_0(struct Player *self, struct Scene *scene) {
+    // THE CODE BELOW IS A HINT ON HOW TO CHECK IF IT IS KICK-OFF
+    struct Ball *ball = scene->ball;
+    if (ball->position.x == CENTER_X &&
+        ball->position.y == CENTER_Y &&
+        ball->velocity.x == 0.0f &&
+        ball->velocity.y == 0.0f
+    )       // it is kick-off, pass to your own half
+        ball->velocity.x = (self->team == 1)? -350.0f: 350.0f;
+    else {  // it is not kick-off, let's play air hockey!
+        ball->velocity.x = 8350.0f;
+        ball->velocity.y = 8350.0f;
+    }
 
-void shooting_logic_1_1(struct Player *self, const struct Scene *scene) { (void) scene; }
+ }
 
-void shooting_logic_1_2(struct Player *self, const struct Scene *scene) { (void) scene; }
 
-void shooting_logic_1_3(struct Player *self, const struct Scene *scene) { (void) scene; }
-
-void shooting_logic_1_4(struct Player *self, const struct Scene *scene) { (void) scene; }
-
-void shooting_logic_1_5(struct Player *self, const struct Scene *scene) { (void) scene; }
+void shooting_logic_1_1(struct Player *self, struct Scene *scene) { (void)scene; }
+void shooting_logic_1_2(struct Player *self, struct Scene *scene) { (void)scene; }
+void shooting_logic_1_3(struct Player *self, struct Scene *scene) { (void)scene; }
+void shooting_logic_1_4(struct Player *self, struct Scene *scene) { (void)scene; }
+void shooting_logic_1_5(struct Player *self, struct Scene *scene) { (void)scene; }
 
 /* Team 2 shooting logic */
-void shooting_logic_2_0(struct Player *self, const struct Scene *scene) { (void) scene; }
-
-void shooting_logic_2_1(struct Player *self, const struct Scene *scene) { (void) scene; }
-
-void shooting_logic_2_2(struct Player *self, const struct Scene *scene) { (void) scene; }
-
-void shooting_logic_2_3(struct Player *self, const struct Scene *scene) { (void) scene; }
-
-void shooting_logic_2_4(struct Player *self, const struct Scene *scene) { (void) scene; }
-
-void shooting_logic_2_5(struct Player *self, const struct Scene *scene) { (void) scene; }
+void shooting_logic_2_0(struct Player *self, struct Scene *scene) { (void)scene; }
+void shooting_logic_2_1(struct Player *self, struct Scene *scene) { (void)scene; }
+void shooting_logic_2_2(struct Player *self, struct Scene *scene) { (void)scene; }
+void shooting_logic_2_3(struct Player *self, struct Scene *scene) { (void)scene; }
+void shooting_logic_2_4(struct Player *self, struct Scene *scene) { (void)scene; }
+void shooting_logic_2_5(struct Player *self, struct Scene *scene) { (void)scene; }
 
 /* Team 1 change_state logic */
-void change_state_logic_1_0(struct Player *self, const struct Scene *scene) { (void) scene; }
-
-void change_state_logic_1_1(struct Player *self, const struct Scene *scene) { (void) scene; }
-
-void change_state_logic_1_2(struct Player *self, const struct Scene *scene) { (void) scene; }
-
-void change_state_logic_1_3(struct Player *self, const struct Scene *scene) { (void) scene; }
-
-void change_state_logic_1_4(struct Player *self, const struct Scene *scene) { (void) scene; }
-
-void change_state_logic_1_5(struct Player *self, const struct Scene *scene) { (void) scene; }
+void change_state_logic_1_0(struct Player *self, struct Scene *scene) { (void)scene; }
+void change_state_logic_1_1(struct Player *self, struct Scene *scene) { (void)scene; }
+void change_state_logic_1_2(struct Player *self, struct Scene *scene) { (void)scene; }
+void change_state_logic_1_3(struct Player *self, struct Scene *scene) { (void)scene; }
+void change_state_logic_1_4(struct Player *self, struct Scene *scene) { (void)scene; }
+void change_state_logic_1_5(struct Player *self, struct Scene *scene) { (void)scene; }
 
 /* Team 2 change_state logic */
-void change_state_logic_2_0(struct Player *self, const struct Scene *scene) { (void) scene; }
-
-void change_state_logic_2_1(struct Player *self, const struct Scene *scene) { (void) scene; }
-
-void change_state_logic_2_2(struct Player *self, const struct Scene *scene) { (void) scene; }
-
-void change_state_logic_2_3(struct Player *self, const struct Scene *scene) { (void) scene; }
-
-void change_state_logic_2_4(struct Player *self, const struct Scene *scene) { (void) scene; }
-
-void change_state_logic_2_5(struct Player *self, const struct Scene *scene) { (void) scene; }
+void change_state_logic_2_0(struct Player *self, struct Scene *scene) { (void)scene; }
+void change_state_logic_2_1(struct Player *self, struct Scene *scene) { (void)scene; }
+void change_state_logic_2_2(struct Player *self, struct Scene *scene) { (void)scene; }
+void change_state_logic_2_3(struct Player *self, struct Scene *scene) { (void)scene; }
+void change_state_logic_2_4(struct Player *self, struct Scene *scene) { (void)scene; }
+void change_state_logic_2_5(struct Player *self, struct Scene *scene) { (void)scene; }
 
 /* -------------------------------------------------------------------------
  * Lookup tables for factory
