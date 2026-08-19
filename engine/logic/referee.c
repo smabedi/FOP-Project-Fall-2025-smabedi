@@ -10,7 +10,7 @@
  * @brief Determines whether a goal has been scored.
  *
  * This function checks if the ball has completely crossed either goal line
- * while also being fully inside the vertical goalmouth.
+ * while also being fully inside the vertical goal mouth.
  *
  * Important details:
  * - A goal is only valid if the *entire ball* (taking BALL_RADIUS into account)
@@ -57,6 +57,10 @@ static int goal(float x, float y) {
  * The ball is considered out only when its *entire area* lies outside
  * the pitch boundaries. Partial overlap with the pitch does NOT count as out.
  *
+ * Notes for students:
+ * - Use BALL_RADIUS to ensure the whole ball has crossed a boundary.
+ * - All four pitch sides (left, right, top, bottom) must be considered.
+ * - This function does not handle goals; goal detection is performed separately.
  * @return true if the ball is fully out of bounds, false otherwise.
  */
 static bool out(float x, float y) {
@@ -86,6 +90,15 @@ static bool out(float x, float y) {
  *
  * This function is responsible for detecting and resolving game events
  * related to the ball, such as goals and out-of-bounds situations.
+ *
+ * Responsibilities:
+ * - Check for goals BEFORE checking for out-of-bounds.
+ * - Update team scores if a goal is detected.
+ * - Report the appropriate game event.
+ *
+ * Notes for students:
+ * - A goal must be checked first because a scored goal is technically out.
+ * - If no event occurs, the game continues normally.
  *
  * @param scene Pointer to the current game scene.
  *
@@ -133,6 +146,11 @@ int referee(struct Scene *scene) {
  * the allowed range and whether the total talent points do not exceed
  * the maximum allowed per player.
  *
+ * Notes for students:
+ * - Each skill must be between 1 and MAX_TALENT_PER_SKILL (inclusive).
+ * - The sum of all skills must not exceed MAX_TALENT_PER_PLAYER.
+ * - Invalid configurations should be reported as errors.
+ *
  * @param talents The talent structure to validate.
  */
 void verify_talents(struct Talents talents) {
@@ -159,6 +177,10 @@ void verify_talents(struct Talents talents) {
  * In particular, only the player who currently possesses the ball
  * is allowed to be in the SHOOTING state.
  *
+ * Notes for students:
+ * - If a player attempts to shoot without possessing the ball,
+ *   their state must be corrected.
+ *
  * @param player Pointer to the player being verified.
  * @param scene  Pointer to the current game scene.
  */
@@ -181,6 +203,11 @@ void verify_state(struct Player *player, struct Scene *scene) {
  *
  * This function ensures that a player's velocity does not exceed
  * the maximum allowed speed derived from their agility talent.
+ *
+ * Notes for students:
+ * - Maximum speed scales linearly with the agility talent.
+ * - Both x and y velocity components must be checked independently.
+ * - If a component exceeds the limit, it must be clamped.
  *
  * @param player Pointer to the player whose movement is being verified.
  */
@@ -214,6 +241,10 @@ void verify_movement(struct Player *player) {
  *
  * Additional kickoff rules:
  * - During kickoff, the ball must be played into the player's own half.
+ *
+ * Notes for students:
+ * - Ball velocity must be clamped if it exceeds the allowed maximum.
+ * - Both velocity components must be checked independently.
  *
  * @param ball    Pointer to the ball being shot.
  * @param kickoff True if the shot occurs during kickoff.

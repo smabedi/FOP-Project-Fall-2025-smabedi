@@ -21,8 +21,8 @@ void init_scene(struct Scene *scene) {
 
     // create players
     for (int i = 0; i < PLAYER_COUNT; i++) {
-        scene->first_team->players[i] = make_player_ptr((float)(50 + i * 50), 300, 1, i);
-        scene->second_team->players[i] = make_player_ptr((float)(700 - i * 40), 300, 2, i);
+        scene->first_team->players[i] = make_player_ptr((float) (50 + i * 50), 300, 1, i);
+        scene->second_team->players[i] = make_player_ptr((float) (700 - i * 40), 300, 2, i);
     }
 
     // initialize ball
@@ -40,10 +40,10 @@ void update_and_verify_scene_states(struct Scene *scene, const float dt) {
     update_team(scene, scene->first_team);
     update_team(scene, scene->second_team);
     update_ball_possessor(scene);
-    
+
     for (int i = 0; i < PLAYER_COUNT; i++) {
-        struct Player* p1 = scene->first_team->players[i];
-        struct Player* p2 = scene->second_team->players[i];
+        struct Player *p1 = scene->first_team->players[i];
+        struct Player *p2 = scene->second_team->players[i];
 
         // move players
         p1->position.x += p1->velocity.x * dt;
@@ -61,7 +61,7 @@ void update_and_verify_scene_states(struct Scene *scene, const float dt) {
         if (p2->position.y > SCREEN_HEIGHT - p2->radius) p2->position.y = SCREEN_HEIGHT - p2->radius;
     }
 
-    struct Ball* ball = scene->ball;
+    struct Ball *ball = scene->ball;
     if (ball->possessor != NULL)
         ball->last_team = ball->possessor->team;
     ball->position.x += ball->velocity.x * dt;
@@ -95,7 +95,7 @@ void update_and_verify_scene_states(struct Scene *scene, const float dt) {
 /**
  * @brief Stops ball and players movements.
  */
-void stop_movements(struct Scene* scene) {
+void stop_movements(struct Scene *scene) {
     // Stop the ball
     scene->ball->velocity.x = 0.0f;
     scene->ball->velocity.y = 0.0f;
@@ -116,11 +116,11 @@ void stop_movements(struct Scene* scene) {
 /**
  * @brief Places ball and players after out or corner.
  */
-void set_piece_out(struct Scene* scene) {
+void set_piece_out(struct Scene *scene) {
 
     stop_movements(scene);
 
-    struct Ball* ball = scene->ball;
+    struct Ball *ball = scene->ball;
     if (ball->last_team == 0) {
         printf("it's not clear which team throw the ball out!\n");
         printf("let's assume it was the first team.\n");
@@ -132,14 +132,14 @@ void set_piece_out(struct Scene* scene) {
     float x = ball->position.x;
     float y = ball->position.y;
 
-    float left_line   = PITCH_X;
-    float right_line  = (PITCH_X + PITCH_W);
-    float top_line    = PITCH_Y;
+    float left_line = PITCH_X;
+    float right_line = (PITCH_X + PITCH_W);
+    float top_line = PITCH_Y;
     float bottom_line = (PITCH_Y + PITCH_H);
 
-    bool past_left   = (x + BALL_RADIUS < left_line);
-    bool past_right  = (x - BALL_RADIUS > right_line);
-    bool past_top    = (y + BALL_RADIUS < top_line);
+    bool past_left = (x + BALL_RADIUS < left_line);
+    bool past_right = (x - BALL_RADIUS > right_line);
+    bool past_top = (y + BALL_RADIUS < top_line);
     bool past_bottom = (y - BALL_RADIUS > bottom_line);
     if (past_left) {
         if (last_team == 2) { // goal kick
@@ -170,20 +170,26 @@ void set_piece_out(struct Scene* scene) {
     }
 
     // Find the closest player to the ball to take the throw-in/kick-in
-    struct Player* kicker = NULL;
+    struct Player *kicker = NULL;
     float min_dist = 999999.0f;
-    struct Player* p = NULL;
+    struct Player *p = NULL;
     if (last_team == 2) {
-        for(int i=0; i < PLAYER_COUNT; i++) {
+        for (int i = 0; i < PLAYER_COUNT; i++) {
             p = scene->first_team->players[i];
             float d = hypotf(p->position.x - ball->position.x, p->position.y - ball->position.y);
-            if (d < min_dist) { min_dist = d; kicker = p; }
+            if (d < min_dist) {
+                min_dist = d;
+                kicker = p;
+            }
         }
     } else {
-        for(int i=0; i < PLAYER_COUNT; i++) {
+        for (int i = 0; i < PLAYER_COUNT; i++) {
             p = scene->second_team->players[i];
             float d = hypotf(p->position.x - ball->position.x, p->position.y - ball->position.y);
-            if (d < min_dist) { min_dist = d; kicker = p; }
+            if (d < min_dist) {
+                min_dist = d;
+                kicker = p;
+            }
         }
     }
 
@@ -197,7 +203,7 @@ void set_piece_out(struct Scene* scene) {
     float dir_x = (CENTER_X) - ball->position.x;
     float dir_y = (CENTER_Y) - ball->position.y;
     float length = hypotf(dir_x, dir_y);
-    
+
     // Normalize and push player 30 units away from center, behind the ball
     kicker->position.x = ball->position.x - (dir_x / length) * 15.0f;
     kicker->position.y = ball->position.y - (dir_y / length) * 15.0f;
@@ -211,17 +217,17 @@ void set_piece_out(struct Scene* scene) {
 /**
  * @brief Resets ball and players to kickoff positions after a goal.
  */
-void set_piece_goal(struct Scene* scene) {
+void set_piece_goal(struct Scene *scene) {
     // Freeze everyone
     stop_movements(scene);
 
-    struct Ball* ball = scene->ball;
+    struct Ball *ball = scene->ball;
     // Identify who kicks off
-    struct Team* kickoff_team = (ball->position.x < CENTER_X) ? scene->first_team : scene->second_team;
-    struct Team* waiting_team = (ball->position.x > CENTER_X) ? scene->first_team : scene->second_team;
+    struct Team *kickoff_team = (ball->position.x < CENTER_X) ? scene->first_team : scene->second_team;
+    struct Team *waiting_team = (ball->position.x > CENTER_X) ? scene->first_team : scene->second_team;
 
-    ball->position.x = (float)CENTER_X;
-    ball->position.y = (float)CENTER_Y;
+    ball->position.x = (float) CENTER_X;
+    ball->position.y = (float) CENTER_Y;
     ball->possessor = NULL;
 
     const float circle_radius = 90.0f;
@@ -229,15 +235,15 @@ void set_piece_goal(struct Scene* scene) {
 
     // Position Kickoff Team
     for (int i = 0; i < PLAYER_COUNT; i++) {
-        struct Player* p = kickoff_team->players[i];
+        struct Player *p = kickoff_team->players[i];
         if (!p) continue;
 
         if (i == 0) {
             // The designated kicker: Place them just behind the ball
             // Direction depends on which side they are attacking
             float side_multiplier = (kickoff_team == scene->first_team) ? 1.0f : -1.0f;
-            p->position.x = (float)CENTER_X + (side_multiplier * 15.0f);
-            p->position.y = (float)CENTER_Y;
+            p->position.x = (float) CENTER_X + (side_multiplier * 15.0f);
+            p->position.y = (float) CENTER_Y;
             ball->possessor = p;
             ball->last_team = p->team;
         } else {
@@ -250,7 +256,7 @@ void set_piece_goal(struct Scene* scene) {
 
     // Position Waiting Team
     for (int i = 0; i < PLAYER_COUNT; i++) {
-        struct Player* p = waiting_team->players[i];
+        struct Player *p = waiting_team->players[i];
         if (!p) continue;
 
         Vec2 position = get_positions(p->team, p->kit);

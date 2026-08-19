@@ -12,9 +12,9 @@
  * 1. Perception: Every player looks at the scene and decides if they should change state.
  * 2. Action: Every player executes the movement or shooting logic for their current state.
  */
-void update_team(struct Scene* scene, struct Team* team) {
+void update_team(struct Scene *scene, struct Team *team) {
     struct Player **players = team->players;
-    struct Ball* ball = scene->ball;
+    struct Ball *ball = scene->ball;
 
     // STEP 1: THINK
     for (int i = 0; i < PLAYER_COUNT; i++)
@@ -68,7 +68,7 @@ void update_team(struct Scene* scene, struct Team* team) {
  */
 struct Team make_team() {
     struct Team t = {
-        .score = 0
+            .score = 0
     };
     return t;
 }
@@ -78,8 +78,8 @@ struct Team make_team() {
  * @param kit The kit color of the team.
  * @return Pointer to a newly allocated Team.
  */
-struct Team * make_team_ptr() {
-    struct Team* t_ptr = (struct Team*)malloc(sizeof(struct Team));
+struct Team *make_team_ptr() {
+    struct Team *t_ptr = (struct Team *) malloc(sizeof(struct Team));
     if (!t_ptr)
         return NULL;
     *t_ptr = make_team();

@@ -15,11 +15,17 @@ typedef struct Vec2 {
 
 
 void vec2_add(struct Vec2 *out, const struct Vec2 *a, const struct Vec2 *b);
+
 void vec2_sub(struct Vec2 *out, struct Vec2 *a, struct Vec2 *b);
+
 void mulVec2(struct Vec2 *out, struct Vec2 *a, struct Vec2 *b);
+
 float dotProduct(struct Vec2 *a, struct Vec2 *b);
+
 float vec2Determinant(struct Vec2 *a, struct Vec2 *b);
+
 float lengthVec2(struct Vec2 *a);
+
 float vec2Rotation(struct Vec2 *a);
 
 #endif

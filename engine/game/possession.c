@@ -9,8 +9,8 @@
  * @brief Internal helper to check if a player's circular hitbox overlaps the ball's.
  * @return 1 if colliding, 0 otherwise.
  */
-static int is_colliding(const struct Player* p, const struct Ball* b) {
-    // Standard Circle-to-Circle collision math: (dist^2 <= combined_radius^2)
+static int is_colliding(const struct Player *p, const struct Ball *b) {
+    // Standard Circle-to-Circle collision math: (distance^2 <= combined_radius^2)
     float dx = p->position.x - b->position.x;
     float dy = p->position.y - b->position.y;
     float dist_sq = dx * dx + dy * dy;
@@ -26,7 +26,7 @@ static int is_colliding(const struct Player* p, const struct Ball* b) {
  * the current possessor's dribbling skill and uses a weighted random roll
  * to determine if the tackle is successful.
  */
-void tackle(struct Player* player, struct Ball* ball) {
+void tackle(struct Player *player, struct Ball *ball) {
     if (!ball->possessor) {
         ball->possessor = player;
         ball->velocity.x = player->velocity.x;
@@ -38,7 +38,7 @@ void tackle(struct Player* player, struct Ball* ball) {
     int dribble_score = ball->possessor->talents.dribbling;
     int sum = defence_score + dribble_score;
 
-    srand((unsigned int)time(NULL));
+    srand((unsigned int) time(NULL));
     int random_roll = rand() % sum;
 
     if (random_roll < defence_score) {
@@ -55,17 +55,19 @@ void tackle(struct Player* player, struct Ball* ball) {
  * in the INTERCEPTING state is colliding with the ball.  
  * If so, calls `tackle()` to potentially transfer possession.
  */
-void update_ball_possessor(struct Scene* scene) {
-    struct Ball* ball = scene->ball;
+void update_ball_possessor(struct Scene *scene) {
+    struct Ball *ball = scene->ball;
 
     for (int i = 0; i < PLAYER_COUNT; i++) {
-        struct Player* p1 = scene->first_team->players[i];
-        struct Player* p2 = scene->second_team->players[i];
+        struct Player *p1 = scene->first_team->players[i];
+        struct Player *p2 = scene->second_team->players[i];
 
-        if (p1 && p1->state == INTERCEPTING && is_colliding(p1, ball))
+        if (p1 && p1->state == INTERCEPTING && is_colliding(p1, ball)) {
             tackle(p1, ball);
+        }
 
-        if (p2 && p2->state == INTERCEPTING && is_colliding(p2, ball))
+        if (p2 && p2->state == INTERCEPTING && is_colliding(p2, ball)) {
             tackle(p2, ball);
+        }
     }
 }

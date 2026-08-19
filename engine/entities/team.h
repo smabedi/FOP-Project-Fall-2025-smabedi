@@ -39,6 +39,6 @@ struct Team *make_team_ptr();
  * @param scene Pointer to the game scene.
  * @param team Pointer to the team to update.
  */
-void update_team(struct Scene* scene, struct Team* team);
+void update_team(struct Scene *scene, struct Team *team);
 
 #endif

@@ -12,7 +12,7 @@
 // --- Mathematical Constants ---
 #define PI 3.14159265358979323846
 #define DEG2RAD(degrees) ((degrees) * (PI / 180.0f))
-#define SEED 20 
+#define SEED 20
 
 // --- Entity Physics ---
 #define BALL_RADIUS 10.0f

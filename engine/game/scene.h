@@ -23,18 +23,21 @@ typedef enum {
 } GameState;
 
 typedef struct Scene {
-    struct Team* first_team;
-    struct Team* second_team;
-    struct Ball* ball;
+    struct Team *first_team;
+    struct Team *second_team;
+    struct Ball *ball;
     Field field;
     GameState state;
     float wait_time;        /**< Secondary timer for "celebration" or "reset" delays. */
     float remaining_time;   /**< The main match countdown. */
 } Scene;
 
-void init_scene(Scene* scene);
-void update_and_verify_scene_states(Scene* scene, const float dt);
-void set_piece_out(Scene* scene);
-void set_piece_goal(Scene* scene);
+void init_scene(Scene *scene);
+
+void update_and_verify_scene_states(Scene *scene, const float dt);
+
+void set_piece_out(Scene *scene);
+
+void set_piece_goal(Scene *scene);
 
 #endif /* ENGINE_GRAPHICS_SCENE_H */

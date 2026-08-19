@@ -9,23 +9,23 @@
 #include "entities/ball.h"
 
 // for scoreboard
-static void draw_filled_rect(SDL_Renderer* r, int x, int y, int w, int h, SDL_Color color) {
+static void draw_filled_rect(SDL_Renderer *r, int x, int y, int w, int h, SDL_Color color) {
     SDL_SetRenderDrawColor(r, color.r, color.g, color.b, color.a);
-    SDL_Rect rect = { x, y, w, h };
+    SDL_Rect rect = {x, y, w, h};
     SDL_RenderFillRect(r, &rect);
 }
 
-static void draw_hollow_circle(SDL_Renderer* r, int cx, int cy, int radius) {
+static void draw_hollow_circle(SDL_Renderer *r, int cx, int cy, int radius) {
     for (float angle = 0; angle < 360; angle += 1.0f) {
         float rad = DEG2RAD(angle);
-        int x = cx + (int)(cos(rad) * radius);
-        int y = cy + (int)(sin(rad) * radius);
+        int x = cx + (int) (cos(rad) * radius);
+        int y = cy + (int) (sin(rad) * radius);
         SDL_RenderDrawPoint(r, x, y);
     }
 }
 
 // goals net texture
-static void draw_net_texture(SDL_Renderer* r, SDL_Rect box) {
+static void draw_net_texture(SDL_Renderer *r, SDL_Rect box) {
     SDL_SetRenderDrawColor(r, 200, 200, 200, 150); // Light grey, slightly transparent looking
     int spacing = 5; // Density of the net
 
@@ -38,12 +38,12 @@ static void draw_net_texture(SDL_Renderer* r, SDL_Rect box) {
         SDL_RenderDrawLine(r, box.x, y, box.x + box.w, y);
 }
 
-static void draw_pitch_markings(SDL_Renderer* r) {
+static void draw_pitch_markings(SDL_Renderer *r) {
     // Draw Grass Stripes
     int stripe_h = SCREEN_HEIGHT / GRASS_STRIPE_COUNT;
     for (int i = 0; i < GRASS_STRIPE_COUNT; i++) {
         if (i % 2 == 0) SDL_SetRenderDrawColor(r, 0, 145, 0, 255);
-        else            SDL_SetRenderDrawColor(r, 0, 120, 0, 255);
+        else SDL_SetRenderDrawColor(r, 0, 120, 0, 255);
         SDL_Rect stripe = {0, i * stripe_h, SCREEN_WIDTH, stripe_h};
         SDL_RenderFillRect(r, &stripe);
     }
@@ -51,15 +51,15 @@ static void draw_pitch_markings(SDL_Renderer* r) {
     // GOAL PARAMETERS
     int goal_top_y = CENTER_Y - (GOAL_HEIGHT / 2);
 
-    SDL_Rect left_goal = { PITCH_X - GOAL_WIDTH, goal_top_y, GOAL_WIDTH, GOAL_HEIGHT };
-    SDL_Rect right_goal = { PITCH_X + PITCH_W, goal_top_y, GOAL_WIDTH, GOAL_HEIGHT };
+    SDL_Rect left_goal = {PITCH_X - GOAL_WIDTH, goal_top_y, GOAL_WIDTH, GOAL_HEIGHT};
+    SDL_Rect right_goal = {PITCH_X + PITCH_W, goal_top_y, GOAL_WIDTH, GOAL_HEIGHT};
 
     // Draw Net Texture
     draw_net_texture(r, left_goal);
     draw_net_texture(r, right_goal);
 
     // Draw White Lines
-    SDL_SetRenderDrawColor(r, 255, 255, 255, 255); 
+    SDL_SetRenderDrawColor(r, 255, 255, 255, 255);
 
     // Goal outlines
     SDL_RenderDrawRect(r, &left_goal);
@@ -67,15 +67,15 @@ static void draw_pitch_markings(SDL_Renderer* r) {
 
     // "Erase" the Goal Mouths. Barely recognizable
     // Use the grass color to overwrite the white line facing the field
-    SDL_SetRenderDrawColor(r, 0, 145, 0, 255); 
+    SDL_SetRenderDrawColor(r, 0, 145, 0, 255);
     // SDL_RenderDrawLine(r, PITCH_X, goal_top_y + 1, PITCH_X, goal_top_y + GOAL_HEIGHT - 1);
     // SDL_RenderDrawLine(r, PITCH_X + PITCH_W, goal_top_y + 1, PITCH_X + PITCH_W, goal_top_y + GOAL_HEIGHT - 1);
 
     // Draw Main Pitch Lines
-    SDL_SetRenderDrawColor(r, 255, 255, 255, 255); 
+    SDL_SetRenderDrawColor(r, 255, 255, 255, 255);
 
     // Out Lines
-    SDL_Rect field_rect = { PITCH_X, PITCH_Y, PITCH_W, PITCH_H };
+    SDL_Rect field_rect = {PITCH_X, PITCH_Y, PITCH_W, PITCH_H};
     SDL_RenderDrawRect(r, &field_rect);
 
     // Center Line & Circle
@@ -86,39 +86,39 @@ static void draw_pitch_markings(SDL_Renderer* r) {
     int box_w = 80;
     int box_h = 200;
     int box_top = CENTER_Y - (box_h / 2);
-    SDL_Rect left_box = { PITCH_X, box_top, box_w, box_h };
+    SDL_Rect left_box = {PITCH_X, box_top, box_w, box_h};
     SDL_RenderDrawRect(r, &left_box);
-    SDL_Rect right_box = { PITCH_X + PITCH_W - box_w, box_top, box_w, box_h };
+    SDL_Rect right_box = {PITCH_X + PITCH_W - box_w, box_top, box_w, box_h};
     SDL_RenderDrawRect(r, &right_box);
 }
 
-static void render_text(SDL_Renderer* r, TTF_Font* font, const char* text, int x, int y, SDL_Color color) {
+static void render_text(SDL_Renderer *r, TTF_Font *font, const char *text, int x, int y, SDL_Color color) {
     if (!font || !text) return;
 
-    SDL_Surface* surface = TTF_RenderText_Solid(font, text, color);
+    SDL_Surface *surface = TTF_RenderText_Solid(font, text, color);
     if (!surface) {
         SDL_Log("TTF_RenderText_Solid failed: %s", TTF_GetError());
         return;
     }
 
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(r, surface);
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(r, surface);
     if (!texture) {
         SDL_Log("SDL_CreateTextureFromSurface failed: %s", SDL_GetError());
     }
 
     // Set the destination rectangle for drawing
-    SDL_Rect dst = { x, y, surface->w, surface->h };
-    
+    SDL_Rect dst = {x, y, surface->w, surface->h};
+
     // Draw the texture and clean up
     if (texture) {
         SDL_RenderCopy(r, texture, NULL, &dst);
         SDL_DestroyTexture(texture);
     }
-    
+
     SDL_FreeSurface(surface);
 }
 
-static void draw_circle(SDL_Renderer* r, int cx, int cy, int radius) {
+static void draw_circle(SDL_Renderer *r, int cx, int cy, int radius) {
     for (int w = 0; w < radius * 2; w++) {
         for (int h = 0; h < radius * 2; h++) {
             const int dx = w - radius;
@@ -135,7 +135,7 @@ static void draw_circle(SDL_Renderer* r, int cx, int cy, int radius) {
  * @param r Pointer to Renderer struct to initialize.
  * @return 0 on success.
  */
-int renderer_init(struct Renderer* r) {
+int renderer_init(struct Renderer *r) {
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         SDL_Log("SDL_Init failed: %s", SDL_GetError());
         exit(1);
@@ -147,11 +147,11 @@ int renderer_init(struct Renderer* r) {
         SDL_Quit();
         exit(1);
     }
-    
+
     extern unsigned char DejaVuSans_ttf[];
     extern unsigned int DejaVuSans_ttf_len;
 
-    SDL_RWops* rw = SDL_RWFromConstMem(DejaVuSans_ttf, DejaVuSans_ttf_len);
+    SDL_RWops *rw = SDL_RWFromConstMem(DejaVuSans_ttf, DejaVuSans_ttf_len);
     r->font = TTF_OpenFontRW(rw, 1, 24);
 
     if (!r->font) {
@@ -163,9 +163,9 @@ int renderer_init(struct Renderer* r) {
         SDL_Log("IMG_Init failed: %s", IMG_GetError());
 
     r->window = SDL_CreateWindow(
-        "Soccer Engine",
-        SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-        SCREEN_WIDTH, SCREEN_HEIGHT, 0
+            "Soccer Engine",
+            SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+            SCREEN_WIDTH, SCREEN_HEIGHT, 0
     );
 
     if (!r->window) {
@@ -183,14 +183,14 @@ int renderer_init(struct Renderer* r) {
     }
 
     // --- Dynamically compute path relative to executable ---
-    #pragma GCC diagnostic push
-    #pragma GCC diagnostic ignored "-Wformat-truncation"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wformat-truncation"
 
     char exe_path[512];
-    const char* base_path = SDL_GetBasePath();  // Returns the directory of the executable
+    const char *base_path = SDL_GetBasePath();  // Returns the directory of the executable
     if (base_path) {
         snprintf(exe_path, sizeof(exe_path), "%sassets/icons/", base_path);
-        SDL_free((void*)base_path); // Free the string returned by SDL_GetBasePath
+        SDL_free((void *) base_path); // Free the string returned by SDL_GetBasePath
     } else {
         // Fallback if SDL_GetBasePath fails
         snprintf(exe_path, sizeof(exe_path), "assets/icons/");
@@ -201,7 +201,7 @@ int renderer_init(struct Renderer* r) {
     snprintf(icon_file, sizeof(icon_file), "%sapp_icon.png", exe_path);
 
 
-    SDL_Surface* icon_surface = IMG_Load(icon_file);
+    SDL_Surface *icon_surface = IMG_Load(icon_file);
     if (icon_surface) {
         SDL_SetWindowIcon(r->window, icon_surface);
         SDL_FreeSurface(icon_surface);
@@ -226,8 +226,8 @@ int renderer_init(struct Renderer* r) {
             SDL_Log("Failed to load BLUE player texture %s: %s", filename, IMG_GetError());
         }
     }
-    #pragma GCC diagnostic pop
-    
+#pragma GCC diagnostic pop
+
     return 0;
 }
 
@@ -236,7 +236,7 @@ int renderer_init(struct Renderer* r) {
  * @brief Cleans up SDL renderer and window.
  * @param r Pointer to Renderer struct.
  */
-void renderer_destroy(struct Renderer* r) {
+void renderer_destroy(struct Renderer *r) {
     if (r->font) TTF_CloseFont(r->font);
     TTF_Quit();
     IMG_Quit();
@@ -258,7 +258,7 @@ void renderer_destroy(struct Renderer* r) {
  * @param r Pointer to Renderer.
  * @param scene Pointer to Scene to render.
  */
-void renderer_draw_scene(struct Renderer* r, const Scene* scene) {
+void renderer_draw_scene(struct Renderer *r, const Scene *scene) {
 
     draw_pitch_markings(r->sdl_renderer);
 
@@ -268,30 +268,31 @@ void renderer_draw_scene(struct Renderer* r, const Scene* scene) {
 
         // Players icon rectangle (position + size)
         SDL_Rect dest_rect = {
-            (int)p1->position.x - p1->radius,
-            (int)p1->position.y - p1->radius,
-            (int)p1->radius * 2,
-            (int)p1->radius * 2
+                (int) p1->position.x - p1->radius,
+                (int) p1->position.y - p1->radius,
+                (int) p1->radius * 2,
+                (int) p1->radius * 2
         };
         if (r->red_icons[i]) {
             SDL_RenderCopy(r->sdl_renderer, r->red_icons[i], NULL, &dest_rect);
         } else { // Fallback to circle if texture failed to load
             SDL_SetRenderDrawColor(r->sdl_renderer, 255, 0, 0, 255);
-            draw_circle(r->sdl_renderer, (int)p1->position.x, (int)p1->position.y, (int)p1->radius);
+            draw_circle(r->sdl_renderer, (int) p1->position.x, (int) p1->position.y, (int) p1->radius);
         }
-        dest_rect.x = (int)p2->position.x - p2->radius;
-        dest_rect.y = (int)p2->position.y - p2->radius;
-        
+        dest_rect.x = (int) p2->position.x - p2->radius;
+        dest_rect.y = (int) p2->position.y - p2->radius;
+
         if (r->blue_icons[i]) {
             SDL_RenderCopy(r->sdl_renderer, r->blue_icons[i], NULL, &dest_rect);
         } else { // Fallback
             SDL_SetRenderDrawColor(r->sdl_renderer, 0, 0, 255, 255);
-            draw_circle(r->sdl_renderer, (int)p2->position.x, (int)p2->position.y, (int)p2->radius);
+            draw_circle(r->sdl_renderer, (int) p2->position.x, (int) p2->position.y, (int) p2->radius);
         }
     }
 
     SDL_SetRenderDrawColor(r->sdl_renderer, 255, 255, 255, 255);
-    draw_circle(r->sdl_renderer, (int)scene->ball->position.x, (int)scene->ball->position.y, (int)scene->ball->radius);
+    draw_circle(r->sdl_renderer, (int) scene->ball->position.x, (int) scene->ball->position.y,
+                (int) scene->ball->radius);
 
     // DRAW SCOREBOARD
     int box_w = 150;
@@ -302,19 +303,19 @@ void renderer_draw_scene(struct Renderer* r, const Scene* scene) {
     // Background (semi-transparent black)
     SDL_SetRenderDrawBlendMode(r->sdl_renderer, SDL_BLENDMODE_BLEND);
     draw_filled_rect(r->sdl_renderer, box_x, box_y, box_w, box_h,
-                     (SDL_Color){0, 0, 0, 200});
+                     (SDL_Color) {0, 0, 0, 200});
 
     // Border (white)
     SDL_SetRenderDrawColor(r->sdl_renderer, 255, 255, 255, 200);
-    SDL_Rect border = { box_x, box_y, box_w, box_h };
+    SDL_Rect border = {box_x, box_y, box_w, box_h};
     SDL_RenderDrawRect(r->sdl_renderer, &border);
 
     // Team scores
-    int left_score  = scene->first_team->score;
+    int left_score = scene->first_team->score;
     int right_score = scene->second_team->score;
 
-    SDL_Color left_color  = (SDL_Color){255, 0, 0, 255};
-    SDL_Color right_color = (SDL_Color){0, 128, 255, 255};
+    SDL_Color left_color = (SDL_Color) {255, 0, 0, 255};
+    SDL_Color right_color = (SDL_Color) {0, 128, 255, 255};
 
     char left_text[16];
     char right_text[16];
@@ -335,7 +336,7 @@ void renderer_draw_scene(struct Renderer* r, const Scene* scene) {
     render_text(r->sdl_renderer, r->font,
                 "VS",
                 box_x + box_w / 2 - 15, box_y + 10,
-                (SDL_Color){255,255,255,255});
+                (SDL_Color) {255, 255, 255, 255});
 
     SDL_RenderPresent(r->sdl_renderer);
 }
@@ -348,7 +349,7 @@ void renderer_draw_scene(struct Renderer* r, const Scene* scene) {
  * 2. Scene Update (Physics & Movement)
  * 3. Referee Check (Rules & Fouls)
  */
-void update_scene(Scene* scene, const float dt) {
+void update_scene(Scene *scene, const float dt) {
     // ----------------------------- PHASE 1: state controll -----------------------------
     // --- State: RESTARTING (The short Delay before calling player to kick-off) ---
     if (scene->state == STATE_RESTARTING) {
@@ -356,8 +357,8 @@ void update_scene(Scene* scene, const float dt) {
         if (scene->wait_time <= 0) {
             scene->state = STATE_RUNNING;
             printf("the player should now kick-off / throw-in ... \n");
-            struct Ball* ball = scene->ball;
-            struct Player* player = ball->possessor;
+            struct Ball *ball = scene->ball;
+            struct Player *player = ball->possessor;
             player->shooting_logic(player, scene);
             verify_shoot(ball, true);
             scene->ball->possessor = NULL;

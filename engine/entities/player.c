@@ -14,17 +14,17 @@
  */
 struct Player make_player(const float x, const float y, const int team, const int kit) {
     struct Player p = {
-        .position = {x, y},
-        .velocity = {0, 0},
-        .radius = PLAYER_RADIUS,
-        .talents = get_talents(team, kit),
-        .state = IDLE,
-        .team = team,
-        .kit = kit,
+            .position = {x, y},
+            .velocity = {0, 0},
+            .radius = PLAYER_RADIUS,
+            .talents = get_talents(team, kit),
+            .state = IDLE,
+            .team = team,
+            .kit = kit,
 
-        .movement_logic     = get_movement_logic(team, kit),
-        .shooting_logic     = get_shooting_logic(team, kit),
-        .change_state_logic = get_change_state_logic(team, kit),
+            .movement_logic     = get_movement_logic(team, kit),
+            .shooting_logic     = get_shooting_logic(team, kit),
+            .change_state_logic = get_change_state_logic(team, kit),
     };
     verify_talents(p.talents);
     return p;

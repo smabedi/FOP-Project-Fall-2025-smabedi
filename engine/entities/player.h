@@ -47,7 +47,7 @@ typedef struct Player {
     struct Vec2 position;
     struct Vec2 velocity;
     const float radius;
-    
+
     PlayerActionState state;
     const struct Talents talents;
     const int team;   // 1: Red (Left), 2: Blue (Right)
@@ -55,16 +55,17 @@ typedef struct Player {
 
     /** AI: Decides HOW to move. */
     void (*movement_logic)(struct Player *self, struct Scene *scene);
-    
+
     /** AI: Decides WHERE and HOW HARD to kick. */
     void (*shooting_logic)(struct Player *self, struct Scene *scene);
-    
+
     /** AI: Decides WHEN to switch states (e.g., from IDLE to MOVING). */
     void (*change_state_logic)(struct Player *self, struct Scene *scene);
 } Player;
 
 // Allocation functions
 struct Player make_player(float x, float y, int team, const int kit);
+
 struct Player *make_player_ptr(float x, float y, int team, const int kit);
 
 #endif /* ENGINE_ENTITIES_PLAYER_H */

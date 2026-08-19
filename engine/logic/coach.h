@@ -25,7 +25,9 @@ typedef void (*PlayerLogicFn)(struct Player *self, struct Scene *scene);
  */
 ///@{
 PlayerLogicFn get_movement_logic(int team, int kit);
+
 PlayerLogicFn get_shooting_logic(int team, int kit);
+
 PlayerLogicFn get_change_state_logic(int team, int kit);
 ///@}
 

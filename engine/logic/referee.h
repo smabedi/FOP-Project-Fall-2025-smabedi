@@ -27,7 +27,7 @@ enum RefereeCode {
  * @brief The main rule-checker called every frame.
  * Checks for goals, out-of-bounds, and ball possession updates.
  */
-int referee(struct Scene* scene);
+int referee(struct Scene *scene);
 
 /**
  * @brief Validates that a player's skills are within the allowed budget.

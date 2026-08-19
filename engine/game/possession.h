@@ -17,12 +17,12 @@
  * * This uses a "Weighted Random" roll based on player talents. 
  * If (Player's Defence) > (Possessor's Dribbling), the ball likely changes hands.
  */
-void tackle(struct Player* player, struct Ball* ball);
+void tackle(struct Player *player, struct Ball *ball);
 
 /**
  * @brief Scans the field to see if any free player has touched the ball.
  * * Typically called every frame to bridge the gap between "Physics" and "Possession."
  */
-void update_ball_possessor(struct Scene* scene);
+void update_ball_possessor(struct Scene *scene);
 
 #endif

@@ -19,7 +19,7 @@ struct Ball {
     struct Vec2 position;
     struct Vec2 velocity;
     const float radius;
-    struct Player* possessor;   /**< Pointer to the player currently holding the ball. NULL if free. */
+    struct Player *possessor;   /**< Pointer to the player currently holding the ball. NULL if free. */
 
     int last_team;      /**< Tracks who last touched the ball (1 or 2) for kickoff rules. */
 };
@@ -29,11 +29,11 @@ struct Ball {
  */
 static inline struct Ball make_ball(float x, float y) {
     struct Ball b = {
-        .position = {x, y},
-        .velocity = {0, 0},
-        .radius = BALL_RADIUS,
-        .possessor  = NULL,
-        .last_team = 0
+            .position = {x, y},
+            .velocity = {0, 0},
+            .radius = BALL_RADIUS,
+            .possessor  = NULL,
+            .last_team = 0
     };
     return b;
 }
@@ -41,7 +41,7 @@ static inline struct Ball make_ball(float x, float y) {
 /**
  * @brief Helper to allocate a ball on the heap.
  */
-static inline struct Ball* make_ball_ptr(float x, float y) {
+static inline struct Ball *make_ball_ptr(float x, float y) {
     struct Ball *b = malloc(sizeof(struct Ball));
     if (b) {
         struct Ball temp = make_ball(x, y);
